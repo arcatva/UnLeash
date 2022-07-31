@@ -38,8 +38,8 @@ def Extract():
         print("----Extracting", ZipFile)
         with zipfile.ZipFile(ZipFile) as zip:
             zip.extractall(path=os.path.dirname(ZipFile))
-    print("--Removing", ZipFile)    
-    os.remove(ZipFile)
+        print("--Removing", ZipFile)    
+        os.remove(ZipFile)
                        
     # def UnTar():
     #     for GzFile in DictArchivedFilesMapping['gz']:
