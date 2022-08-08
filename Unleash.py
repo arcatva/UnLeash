@@ -15,7 +15,7 @@ Version 0.1
 import os, gzip, tarfile, zipfile
 
 ArchivedFilesExtend = ['tar','gz','zip','rar'] # customize the supported extend types
-PATH = os.getcwd() 
+PATH = os.getcwd() # set working dir
 
 def WalkFiles():
     global DictArchivedFilesMapping
@@ -34,25 +34,44 @@ def JudgeDict():
     return Judge   # TRUE if all lists are empty in all types of file
 
 def Extract():
-    for ZipFile in DictArchivedFilesMapping['zip']:
-        print("----Extracting", ZipFile)
-        with zipfile.ZipFile(ZipFile) as zip:
-            zip.extractall(path=os.path.dirname(ZipFile))
-        print("--Removing", ZipFile)    
-        os.remove(ZipFile)
-                       
-    # def UnTar():
-    #     for GzFile in DictArchivedFilesMapping['gz']:
-    #         gzip.decompress(GzFile)
-    #         os.remove(GzFile)
-    # def ...
+    if DictArchivedFilesMapping['zip']:
+        extract.UnZip()
+    if DictArchivedFilesMapping['gz']:
+        extract.UnGz()
+    if DictArchivedFilesMapping['tar']:
+        extract.UnTar()
+            
+class extract:
+    @staticmethod
+    def UnZip():
+        for ZipFile in DictArchivedFilesMapping['zip']:
+            print("----Extracting", ZipFile)
+            with zipfile.ZipFile(ZipFile) as zip:
+                zip.extractall(path=os.path.dirname(ZipFile))
+            print("--Removing", ZipFile)    
+            os.remove(ZipFile)
+    @staticmethod
+    def UnTar():        
+        for TarFile in DictArchivedFilesMapping['tar']:
+            print("----Extracting", TarFile)
+            Tarfile = tarfile.open(TarFile)
+            Tarfile.extractall()
+    @staticmethod
+    def UnGz():
+        for GzFile in DictArchivedFilesMapping['gz']:
+            print("----Extracting", GzFile)
+            Gzfile = tarfile.open(GzFile)
+            Gzfile.extractall()
+ 
 
-
-if __name__ == "__main__":
+def main():
     WalkFiles()
     while JudgeDict() is not True:
         Extract()
         WalkFiles()
     else:
         print("All Completed!")
-    
+
+
+if __name__ == "__main__":
+    main()
