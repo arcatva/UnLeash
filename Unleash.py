@@ -12,7 +12,7 @@ zhefu_zhang@dell.com
 Version 0.1
 """
 
-import os, gzip, tarfile, zipfile
+import os, rarfile, tarfile, zipfile
 
 ArchivedFilesExtend = ['tar','gz','zip','rar'] # customize the supported extend types
 PATH = os.getcwd() # set working dir
@@ -40,6 +40,8 @@ def Extract():
         extract.UnGz()
     if DictArchivedFilesMapping['tar']:
         extract.UnTar()
+    if DictArchivedFilesMapping['rar']:
+        extract.UnRar()
             
 class extract:
     @staticmethod
@@ -56,12 +58,23 @@ class extract:
             print("----Extracting", TarFile)
             Tarfile = tarfile.open(TarFile)
             Tarfile.extractall()
+            os.remove(TarFile)
     @staticmethod
     def UnGz():
         for GzFile in DictArchivedFilesMapping['gz']:
             print("----Extracting", GzFile)
             Gzfile = tarfile.open(GzFile)
             Gzfile.extractall()
+            os.remove(GzFile)
+    @staticmethod
+    def UnRar():
+        for RARFile in DictArchivedFilesMapping['rar']:
+            print("----Extracting", RARFile)
+            RARfile = rarfile.RarFile(RARfile)
+            RARfile.extractall()
+            os.remove(RARFile)
+
+
  
 
 def main():
