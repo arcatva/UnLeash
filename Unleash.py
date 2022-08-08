@@ -9,12 +9,12 @@
                                                                                                                                                                                                                                      
 Unleash recursively extracting file
 zhefu_zhang@dell.com
-Version 0.1
+Version 1.1
 """
 
-import os, rarfile, tarfile, zipfile
+import os, rarfile, tarfile, zipfile, gzip
 
-ArchivedFilesExtend = ['tar','gz','zip','rar'] # customize the supported extend types
+ArchivedFilesExtend = ['tar','gz','zip','rar','tgz'] # customize the supported extend types
 PATH = os.getcwd() # set working dir
 
 def WalkFiles():
@@ -42,6 +42,8 @@ def Extract():
         extract.UnTar()
     if DictArchivedFilesMapping['rar']:
         extract.UnRar()
+    if DictArchivedFilesMapping['tgz']:
+        extract.UnTgz()
             
 class extract:
     @staticmethod
@@ -50,7 +52,8 @@ class extract:
             print("----Extracting", ZipFile)
             with zipfile.ZipFile(ZipFile) as zip:
                 zip.extractall(path=os.path.dirname(ZipFile))
-            print("--Removing", ZipFile)    
+            zip.close()
+            print("--Removing", ZipFile)
             os.remove(ZipFile)
     @staticmethod
     def UnTar():        
@@ -58,13 +61,16 @@ class extract:
             print("----Extracting", TarFile)
             Tarfile = tarfile.open(TarFile)
             Tarfile.extractall()
+            Tarfile.close()
             os.remove(TarFile)
     @staticmethod
     def UnGz():
         for GzFile in DictArchivedFilesMapping['gz']:
             print("----Extracting", GzFile)
-            Gzfile = tarfile.open(GzFile)
-            Gzfile.extractall()
+            Gzfile = gzip.GzipFile(GzFile)
+            gzip.decompress(GzFile)
+            Gzfile.close()
+            print("--Removing", GzFile)
             os.remove(GzFile)
     @staticmethod
     def UnRar():
@@ -72,10 +78,16 @@ class extract:
             print("----Extracting", RARFile)
             RARfile = rarfile.RarFile(RARfile)
             RARfile.extractall()
+            print("--Removing", RARFile)
             os.remove(RARFile)
-
-
- 
+    @staticmethod        
+    def UnTgz():        
+        for TgzFile in DictArchivedFilesMapping['tgz']:
+            print("----Extracting", TgzFile)
+            Tgzfile = tarfile.open(TgzFile)
+            Tgzfile.extractall()
+            print("--Removing", TgzFile)
+            os.remove(TgzFile)
 
 def main():
     WalkFiles()
@@ -84,7 +96,6 @@ def main():
         WalkFiles()
     else:
         print("All Completed!")
-
 
 if __name__ == "__main__":
     main()
