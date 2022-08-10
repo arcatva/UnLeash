@@ -28,7 +28,11 @@ def WalkFiles():
             for Extend in ArchivedFilesExtend: 
                 if CompletePath.endswith(Extend):
                     DictArchivedFilesMapping[Extend].append(CompletePath) # append CompletePath respectively into the extend list of the dict
-      
+                        
+# def SkipFile(func):
+#     func()
+#     print('ds')
+
 def JudgeDict():
     Judge = all(value == [] for value in DictArchivedFilesMapping.values())
     return Judge   # TRUE if all lists are empty in all types of file
@@ -62,6 +66,7 @@ class extract:
             Tarfile = tarfile.open(TarFile)
             Tarfile.extractall()
             Tarfile.close()
+            print("--Removing", TarFile)
             os.remove(TarFile)
     @staticmethod
     def UnGz():
@@ -88,6 +93,9 @@ class extract:
             Tgzfile.extractall()
             print("--Removing", TgzFile)
             os.remove(TgzFile)
+
+
+
 
 def main():
     WalkFiles()
